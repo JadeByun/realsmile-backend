@@ -1,0 +1,4 @@
+{
+  "mongoURI": "mongodb+srv://jimin123:jimin123@realsmile.7icpj.mongodb.net/<dbname>?retryWrites=true&w=majority",
+  "jwtToken": "myJwtToken"
+}
