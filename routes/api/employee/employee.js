@@ -6,16 +6,15 @@ const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
 
-const Employer = require('../../models/Employers');
+const Employee = require('../../../models/Employee');
 
-// @route      POST api/employers
-// @desc       Register employers
+// @route      POST api/employees
+// @desc       Register employees
 // @access     Public
 router.post(
   '/',
   [
-    check('firstName', 'First name is required').not().isEmpty(),
-    check('lastName', 'Last name is required').not().isEmpty(),
+    check('employeeName', 'Employee name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
     check(
       'password',
@@ -30,35 +29,42 @@ router.post(
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { firstName, lastName, email, password } = req.body;
+    const { employeeName, email, password } = req.body;
 
     try {
-      // See if employers exists
-      let employer = await Employer.findOne({ email });
+      // See if employees exists
+      let employee = await Employee.findOne({ email });
 
-      if (employer) {
+      if (employee) {
         return res
           .status(400)
-          .json({ errors: [{ msg: 'Employer already exists' }] });
+          .json({ errors: [{ msg: 'Employee already exists' }] });
       }
 
-      employer = new Employer({
-        firstName,
-        lastName,
+      // Get employee's gravatar
+      const avatar = gravatar.url(email, {
+        s: '200',
+        r: 'pg',
+        d: 'mm',
+      });
+
+      employee = new Employee({
+        employeeName,
         email,
+        avatar,
         password,
       });
 
       // Encrypt password using bcrypt
       const salt = await bcrypt.genSalt(10);
-      employer.password = await bcrypt.hash(password, salt);
+      employee.password = await bcrypt.hash(password, salt);
 
-      await employer.save();
+      await employee.save();
 
       // Return jsonwebtoken
       const payload = {
-        employer: {
-          id: employer.id,
+        employee: {
+          id: employee.id,
         },
       };
 

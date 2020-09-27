@@ -12,12 +12,19 @@ app.use(express.json({ extended: false }));
 app.get('/', (req, res) => res.send('API Running'));
 
 // Define Routes
-app.use('/api/employees', require('./routes/api/employees'));
-app.use('/api/employers', require('./routes/api/employers'));
-app.use('/api/employee-profile', require('./routes/api/employee-profile'));
-app.use('/api/employer-profile', require('./routes/api/employer-profile'));
-app.use('/api/job-posts', require('./routes/api/job-posts'));
-app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/employee', require('./routes/api/employee/employee'));
+app.use('/api/employer', require('./routes/api/employer/employer'));
+app.use(
+  '/api/employee-profile',
+  require('./routes/api/employee/employee-profile')
+);
+app.use(
+  '/api/employer-profile',
+  require('./routes/api/employer/employer-profile')
+);
+app.use('/api/job-post', require('./routes/api/job-post'));
+app.use('/api/employee-auth', require('./routes/api/employee/employee-auth'));
+app.use('/api/employer-auth', require('./routes/api/employer/employer-auth'));
 
 const PORT = process.env.PORT || 5000;
 
