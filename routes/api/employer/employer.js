@@ -8,8 +8,8 @@ const { check, validationResult } = require('express-validator');
 
 const Employer = require('../../../models/Employer');
 
-// @route      POST api/employers
-// @desc       Register employers
+// @route      POST api/employer
+// @desc       Register employer
 // @access     Public
 router.post(
   '/',
@@ -33,7 +33,7 @@ router.post(
     const { firstName, lastName, email, password } = req.body;
 
     try {
-      // See if employers exists
+      // See if employer exists
       let employer = await Employer.findOne({ email });
 
       if (employer) {
