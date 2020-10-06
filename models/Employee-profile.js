@@ -1,30 +1,44 @@
 const mongoose = require('mongoose');
-// add the Currency type to the Mongoose Schema types
-require('mongoose-currency').loadType(mongoose);
+const Schema = mongoose.Schema;
 
-const EmployeeProfileSchema = new mongoose.Schema({
-  employee: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'employee',
+const { JobTitles, JobTypes, Days } = require('./items');
+
+const DaysSchema = new mongoose.Schema({
+  day: {
+    type: String,
+    enum: Object.values(Days),
   },
-  position: [{ type: String }],
-  availability: [
-    {
-      day: {
-        type: Number,
-        min: 1,
-        max: 7,
-      },
-      startAt: {
-        type: Number,
-        min: 0,
-        max: 24 * 60 - 1,
-      },
-      stopAt: { type: Number, min: 0, max: 24 * 60 - 1 },
-    },
-  ],
-  expectedHourlyWage: {
-    min: { type: mongoose.Types.Currency },
-    max: { type: mongoose.Types.Currency },
-  },
+  startAt: { type: Number, min: 0, max: 24 * 60 - 1 },
+  endAt: { type: Number, min: 0, max: 24 * 60 - 1 },
 });
+
+const EmployeeProfileSchema = new mongoose.Schema(
+  {
+    employee: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'employee',
+    },
+    jobTitles: { type: [String], enum: Object.values(JobTitles) },
+    jobTypes: { type: [String], enum: Object.values(JobTypes) },
+    location: String,
+    radius: Number,
+    minExpectedWage: Number,
+
+    selfIntroduction: String,
+    availability: {
+      isAnytime: {
+        type: Boolean,
+        default: false,
+      },
+      days: [DaysSchema],
+    },
+  },
+  { timestamps: true }
+);
+
+Object.assign(EmployeeProfileSchema.statics, { JobTitles, JobTypes, Days });
+
+module.exports = EmployeeProfile = mongoose.model(
+  'employee-profile',
+  EmployeeProfileSchema
+);
