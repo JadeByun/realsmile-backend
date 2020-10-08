@@ -1,6 +1,28 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
+const ExperienceSchema = new mongoose.Schema({
+  title: {
+    type: String,
+    required: true,
+  },
+  restaurant: {
+    type: String,
+    required: true,
+  },
+  location: String,
+  from: {
+    type: Date,
+    required: true,
+  },
+  to: Date,
+  current: {
+    type: Boolean,
+    default: false,
+  },
+  description: String,
+});
+
 const EmployeeSchema = new mongoose.Schema(
   {
     employeeName: {
@@ -16,13 +38,12 @@ const EmployeeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    avatar: {
-      type: String,
-    },
+    avatar: String,
     date: {
       type: Date,
       default: Date.now,
     },
+    experience: [ExperienceSchema],
   },
   { timestamps: true }
 );

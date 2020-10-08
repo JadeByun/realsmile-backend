@@ -18,13 +18,20 @@ const JobPostSchema = new Schema(
       type: Schema.Types.ObjectId,
       ref: 'employer',
     },
-    jobTitles: { type: [String], enum: Object.values(JobTitles) },
-    jobTypes: { type: [String], enum: Object.values(JobTypes) },
+    name: {
+      type: String,
+    },
+    titles: {
+      type: [String],
+      enum: Object.values(JobTitles),
+      required: true,
+    },
+    types: { type: [String], enum: Object.values(JobTypes), required: true },
     wage: {
       min: Number,
       max: Number,
     },
-    jobDescription: String,
+    description: { type: [String], required: true },
 
     workHours: {
       TBD: {

@@ -12,7 +12,7 @@ const DaysSchema = new mongoose.Schema({
   endAt: { type: Number, min: 0, max: 24 * 60 - 1 },
 });
 
-const EmployeeProfileSchema = new mongoose.Schema(
+const AvailabilitySchema = new mongoose.Schema(
   {
     employee: {
       type: mongoose.Schema.Types.ObjectId,
@@ -25,20 +25,18 @@ const EmployeeProfileSchema = new mongoose.Schema(
     minExpectedWage: Number,
 
     selfIntroduction: String,
-    availability: {
-      isAnytime: {
-        type: Boolean,
-        default: false,
-      },
-      days: [DaysSchema],
+    isAnytime: {
+      type: Boolean,
+      default: false,
     },
+    days: [DaysSchema],
   },
   { timestamps: true }
 );
 
-Object.assign(EmployeeProfileSchema.statics, { JobTitles, JobTypes, Days });
+Object.assign(AvailabilitySchema.statics, { JobTitles, JobTypes, Days });
 
-module.exports = EmployeeProfile = mongoose.model(
-  'employee-profile',
-  EmployeeProfileSchema
+module.exports = Availability = mongoose.model(
+  'Availability',
+  AvailabilitySchema
 );

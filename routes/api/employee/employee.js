@@ -5,6 +5,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const config = require('config');
 const { check, validationResult } = require('express-validator');
+const auth = require('../../../middleware/auth');
 
 const Employee = require('../../../models/Employee');
 
@@ -80,6 +81,60 @@ router.post(
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Server error');
+    }
+  }
+);
+
+// @route      PUT api/employee/experience
+// @desc       Add employee experience
+// @access     Priavte
+router.put(
+  '/experience',
+  [
+    auth,
+    [
+      check('title', 'Title is required').not().isEmpty(),
+      check('restaurant', 'Restaurant is required').not().isEmpty(),
+      check('from', 'From date is required')
+        .not()
+        .isEmpty()
+        .custom((value, { req }) => (req.body.to ? value < req.body.to : true)),
+    ],
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+
+    const {
+      title,
+      restaurant,
+      location,
+      from,
+      to,
+      current,
+      description,
+    } = req.body;
+
+    const newExp = {
+      title,
+      restaurant,
+      location,
+      from,
+      to,
+      current,
+      description,
+    };
+
+    try {
+      const employee = await Employee.findById(req.employee.id);
+      employee.experience.unshift(newExp);
+      await employee.save();
+      res.json(employee);
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).send('Server Error');
     }
   }
 );

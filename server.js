@@ -14,15 +14,9 @@ app.get('/', (req, res) => res.send('API Running'));
 // Define Routes
 app.use('/api/employee', require('./routes/api/employee/employee'));
 app.use('/api/employer', require('./routes/api/employer/employer'));
-app.use(
-  '/api/employee-profile',
-  require('./routes/api/employee/employee-profile')
-);
-app.use(
-  '/api/employer-profile',
-  require('./routes/api/employer/employer-profile')
-);
-app.use('/api/job-post', require('./routes/api/job-post'));
+app.use('/api/availability', require('./routes/api/employee/availability'));
+app.use('/api/restaurant', require('./routes/api/employer/restaurant'));
+app.use('/api/job-posts', require('./routes/api/employer/job-posts'));
 app.use('/api/employee-auth', require('./routes/api/employee/employee-auth'));
 app.use('/api/employer-auth', require('./routes/api/employer/employer-auth'));
 
